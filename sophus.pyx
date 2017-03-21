@@ -37,6 +37,30 @@ cdef class SO3:
     def log(self):
         return ndarray(self.thisptr.log())
 
+    def inverse(self):
+        res = SO3()
+        res.thisptr = new _SO3d(self.thisptr.inverse()) 
+        return res
+
+    def normalize(self):
+        self.thisptr.normalize()
+
+    def __mul__(SO3 x, SO3 y):
+        """
+        Group multiplication operator
+        """
+        res = SO3()
+        res.thisptr[0] = x.thisptr.mul(deref(y.thisptr))
+        return res
+
+    def __imul__(self, SO3 y):
+        """
+        In place group multiplication
+        a *= b is the same as a = a*b
+        """
+        self.thisptr[0] = self.thisptr.mul(deref(y.thisptr))
+        return self
+
     @staticmethod
     def exp(np.ndarray arr):
         """
@@ -45,6 +69,19 @@ cdef class SO3:
         res = SO3()
         res.thisptr = new _SO3d(_SO3d.exp(Map[Vector3d](arr)))
         return res
+
+    @staticmethod
+    def generator(int i):
+        return ndarray(_SO3d.generator(i))
+
+    @staticmethod
+    def hat(np.ndarray tangent):
+        return ndarray(_SO3d.hat(Map[Vector3d](tangent)))
+
+    @staticmethod
+    def vee(np.ndarray transformation):
+        return ndarray(_SO3d.vee(Map[Matrix3d](transformation)))
+
 
 cdef class SE3:
     cdef _SE3d *thisptr
@@ -80,6 +117,36 @@ cdef class SE3:
     def log(self):
         return ndarray(self.thisptr.log())
 
+    def inverse(self):
+        res = SE3()
+        res.thisptr = new _SE3d(self.thisptr.inverse()) 
+        return res
+
+    def normalize(self):
+        self.thisptr.normalize()
+
+    def rotationMatrix(self):
+        return ndarray(self.thisptr.so3().matrix())
+
+    def setRotationMatrix(self, np.ndarray matrix):
+        self.thisptr.setRotationMatrix(Map[Matrix3d](matrix))
+
+    def __mul__(SE3 x, SE3 y):
+        """
+        Group multiplication operator
+        """
+        res = SE3()
+        res.thisptr[0] = x.thisptr.mul(deref(y.thisptr))
+        return res
+
+    def __imul__(self, SE3 y):
+        """
+        In place group multiplication
+        a *= b is the same as a = a*b
+        """
+        self.thisptr[0] = self.thisptr.mul(deref(y.thisptr))
+        return self
+
     @staticmethod
     def exp(np.ndarray arr):
         """
@@ -88,3 +155,14 @@ cdef class SE3:
         res = SE3()
         res.thisptr = new _SE3d(_SE3d.exp(Map[VectorXd](arr)))
         return res
+    @staticmethod
+    def generator(int i):
+        return ndarray(_SE3d.generator(i))
+    @staticmethod
+    def hat(np.ndarray tangent):
+        return ndarray(_SE3d.hat(Map[VectorXd](tangent)))
+
+    @staticmethod
+    def vee(np.ndarray transformation):
+        return ndarray(_SE3d.vee(Map[Matrix4d](transformation)))
+
