@@ -22,11 +22,16 @@ This package uses:
 
 Supported operations
 --------------------
-*Updated on 21/03/2017*
+*Updated on 23/03/2017*
 
 So far, only basic operations are supported:
 - `SE3`, `SO3` representation
-- log, exp, and basic convenience functions
+- Most common group operations (`exp`, `log`, `vee`, `hat`)
+- Operators on groups (group multiplication `*`)
+- Single axis factories (`rotX`, `rotY`, `rotZ`, `trans(x,y,z)`, `transX`, `transY`, `transZ`)
+- ... (Look at `sophus.pxd` for a complete list of supported operations)
+
+If you require any functionality that is not currently in the wrapper, feel free to open a merge request.
 
 How to install
 --------------
@@ -62,13 +67,22 @@ Python usage is transparent, the naming convention of Sophus is kept for the bin
 from sophus import *
 import numpy as np
 
+# Default SE3 group element (Identity)
 T = SE3()
-t = T.log()
+# Single axis factory: rotation around axis
+Tx = SE3.rotX(1.3)
+Ty = SE4.rotY(0.5)
+# Group operators
+T_prod = Tx * Ty
+
+# Group Exponential and Log operations
+t = T_prod.log()
 T = SE3.exp(t)
 R = T.so3()
 r = R.log()
 R = SO3.exp(r)
 
+# Conversion to/from numpy
 numpy_mat = T.matrix()
 numpy_mat[0,3] = 2;
 T = SE3(numpy_mat)
@@ -76,4 +90,5 @@ T.log()
 
 x = np.array([1,0,0,0,0,0]).T
 T = SE3.exp(x)
+print(T)
 ```
