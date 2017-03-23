@@ -188,6 +188,15 @@ cdef class SE3:
         return ndarray(_SE3d.vee(Map[Matrix4d](transformation)))
 
     @staticmethod
+    def transX(x):
+        return SE3.trans(x, 0, 0)
+    @staticmethod
+    def transY(y):
+        return SE3.trans(0, y, 0)
+    @staticmethod
+    def transZ(z):
+        return SE3.trans(0, 0, z)
+    @staticmethod
     def rotX(scalar):
         res = SE3()
         res.thisptr = new _SE3d(_SE3d.rotX(scalar))

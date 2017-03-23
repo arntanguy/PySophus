@@ -7,8 +7,8 @@ cdef extern from "<sophus/so3.hpp>" namespace "Sophus":
   cdef cppclass SO3[Scalar]:
       SO3() except +
       # copy constructor
-      SO3(SO3&) except +
-      SO3(Map[Matrix3d]&) except +
+      SO3(const SO3&) except +
+      SO3(const Map[Matrix3d]&) except +
 
       Matrix3d& matrix()
 
@@ -17,18 +17,18 @@ cdef extern from "<sophus/so3.hpp>" namespace "Sophus":
       SO3 inverse()
       void normalize()
 
-      SO3 mul "operator*"(SO3)
-      SO3 mul_assign "operator*="(SO3)
+      SO3 mul "operator*"(const SO3&)
+      SO3 mul_assign "operator*="(const SO3&)
 
 
       @staticmethod
-      SO3[Scalar] exp(Map[Vector3d]&)
+      SO3[Scalar] exp(const Map[Vector3d]&)
       @staticmethod
       Matrix3d generator(int i)
       @staticmethod
-      Matrix3d hat(Map[Vector3d]&)
+      Matrix3d hat(const Map[Vector3d]&)
       @staticmethod
-      Vector3d vee(Map[Matrix3d]&)
+      Vector3d vee(const Map[Matrix3d]&)
       @staticmethod
       SO3 rotX(const Scalar&)
       @staticmethod
@@ -40,8 +40,8 @@ cdef extern from "<sophus/so3.hpp>" namespace "Sophus":
 cdef extern from "<sophus/se3.hpp>" namespace "Sophus":
   cdef cppclass SE3[Scalar]:
     SE3() except +
-    SE3(SE3&) except +
-    SE3(Map[Matrix4d] &mat) except +
+    SE3(const SE3&) except +
+    SE3(const Map[Matrix4d] &mat) except +
 
     Matrix4d& matrix()
     Vector3d translation()
@@ -53,18 +53,18 @@ cdef extern from "<sophus/se3.hpp>" namespace "Sophus":
     void normalize()
 
     Matrix4d rotationMatrix()
-    void setRotationMatrix(Map[Matrix3d]&)
+    void setRotationMatrix(const Map[Matrix3d]&)
 
-    SE3 mul "operator*"(SE3)
-    SE3 mul_assign "operator*="(SE3)
+    SE3 mul "operator*"(const SE3&)
+    SE3 mul_assign "operator*="(const SE3&)
     @staticmethod
-    SE3[Scalar] exp(Map[VectorXd]&)
+    SE3[Scalar] exp(const Map[VectorXd]&)
     @staticmethod
     Matrix4d generator(int i)
     @staticmethod
-    Matrix4d hat(Map[VectorXd]&)
+    Matrix4d hat(const Map[VectorXd]&)
     @staticmethod
-    VectorXd vee(Map[Matrix4d]&)
+    VectorXd vee(const Map[Matrix4d]&)
 
     # Single axis factories
     @staticmethod
