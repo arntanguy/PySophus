@@ -29,6 +29,12 @@ cdef extern from "<sophus/so3.hpp>" namespace "Sophus":
       Matrix3d hat(Map[Vector3d]&)
       @staticmethod
       Vector3d vee(Map[Matrix3d]&)
+      @staticmethod
+      SO3 rotX(const Scalar&)
+      @staticmethod
+      SO3 rotY(const Scalar&)
+      @staticmethod
+      SO3 rotZ(const Scalar&)
       
 
 cdef extern from "<sophus/se3.hpp>" namespace "Sophus":
@@ -36,7 +42,6 @@ cdef extern from "<sophus/se3.hpp>" namespace "Sophus":
     SE3() except +
     SE3(SE3&) except +
     SE3(Map[Matrix4d] &mat) except +
-    # SE3(Map[Matrix3d] &rot, Map[Vector3d]& trans) except +
 
     Matrix4d& matrix()
     Vector3d translation()
@@ -60,3 +65,19 @@ cdef extern from "<sophus/se3.hpp>" namespace "Sophus":
     Matrix4d hat(Map[VectorXd]&)
     @staticmethod
     VectorXd vee(Map[Matrix4d]&)
+
+    # Single axis factories
+    @staticmethod
+    SE3 trans(const Scalar&, const Scalar&, const Scalar&)
+    @staticmethod
+    SE3 transX(const Scalar&)
+    @staticmethod
+    SE3 transY(const Scalar&)
+    @staticmethod
+    SE3 transZ(const Scalar&)
+    @staticmethod
+    SE3 rotX(const Scalar&)
+    @staticmethod
+    SE3 rotY(const Scalar&)
+    @staticmethod
+    SE3 rotZ(const Scalar&)

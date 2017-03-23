@@ -4,6 +4,7 @@ from sophus_defs cimport SO3 as _SO3
 from sophus_defs cimport SE3 as _SE3
 from eigency.core cimport *
 from cython.operator cimport dereference as deref
+import numpy
 
 ctypedef _SO3[double] _SO3d # double precision SO3 
 ctypedef _SO3[float] _SO3f  # single precision SO3 
@@ -61,6 +62,9 @@ cdef class SO3:
         self.thisptr[0] = self.thisptr.mul(deref(y.thisptr))
         return self
 
+    def __str__(self):
+        return numpy.array_str(self.matrix())
+
     @staticmethod
     def exp(np.ndarray arr):
         """
@@ -82,7 +86,21 @@ cdef class SO3:
     def vee(np.ndarray transformation):
         return ndarray(_SO3d.vee(Map[Matrix3d](transformation)))
 
-
+    @staticmethod
+    def rotX(scalar):
+        res = SO3()
+        res.thisptr = new _SO3d(_SO3d.rotX(scalar))
+        return res
+    @staticmethod
+    def rotY(scalar):
+        res = SO3()
+        res.thisptr = new _SO3d(_SO3d.rotY(scalar))
+        return res
+    @staticmethod
+    def rotZ(scalar):
+        res = SO3()
+        res.thisptr = new _SO3d(_SO3d.rotZ(scalar))
+        return res
 cdef class SE3:
     cdef _SE3d *thisptr
 
@@ -147,6 +165,9 @@ cdef class SE3:
         self.thisptr[0] = self.thisptr.mul(deref(y.thisptr))
         return self
 
+    def __str__(self):
+        return numpy.array_str(self.matrix())
+
     @staticmethod
     def exp(np.ndarray arr):
         """
@@ -166,3 +187,23 @@ cdef class SE3:
     def vee(np.ndarray transformation):
         return ndarray(_SE3d.vee(Map[Matrix4d](transformation)))
 
+    @staticmethod
+    def rotX(scalar):
+        res = SE3()
+        res.thisptr = new _SE3d(_SE3d.rotX(scalar))
+        return res
+    @staticmethod
+    def rotY(scalar):
+        res = SE3()
+        res.thisptr = new _SE3d(_SE3d.rotY(scalar))
+        return res
+    @staticmethod
+    def rotZ(scalar):
+        res = SE3()
+        res.thisptr = new _SE3d(_SE3d.rotZ(scalar))
+        return res
+    @staticmethod
+    def trans(x, y, z):
+        res = SE3()
+        res.thisptr = new _SE3d(_SE3d.trans(x,y,z))
+        return res
