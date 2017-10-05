@@ -4,7 +4,7 @@ from distutils.core import setup
 from distutils.extension import Extension
 from Cython.Build import cythonize
 import eigency
-
+print eigency.get_includes(include_eigen=False)
 setup(
     ext_modules = cythonize([Extension("sophus", 
         sources=["sophus.pyx"],

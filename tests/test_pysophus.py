@@ -1,3 +1,5 @@
+#!/usr/bin/env python2
+
 import unittest
 from sophus import *
 import numpy as np
