@@ -23,7 +23,11 @@ cdef class SO3:
             self.thisptr = new _SO3d(deref(ostr.thisptr))
         elif other is not None and type(other) is np.ndarray:
             # print "Init SO3 from ndarray"
-            self.thisptr = new _SO3d(Map[Matrix3d](other))
+            np_contiguous = other
+            # Eigency expects 'F_CONTIGUOUS' layout, convert if this is not the case
+            if other.flags['C_CONTIGUOUS']:
+                np_contiguous = numpy.copy(other, order='F')
+            self.thisptr = new _SO3d(Map[Matrix3d](np_contiguous))
         else:
             # print "Init empty SO3"
             self.thisptr = new _SO3d()
@@ -112,7 +116,11 @@ cdef class SE3:
             self.thisptr = new _SE3d(deref(ostr.thisptr))
         elif other is not None and type(other) is np.ndarray:
             # print "Init SE3 from ndarray"
-            self.thisptr = new _SE3d(Map[Matrix4d](other))
+            np_contiguous = other
+            # Eigency expects 'F_CONTIGUOUS' layout, convert if this is not the case
+            if other.flags['C_CONTIGUOUS']:
+                np_contiguous = numpy.copy(other, order='F')
+            self.thisptr = new _SE3d(Map[Matrix4d](np_contiguous))
         else:
             # print "Init empty SE3"
             self.thisptr = new _SE3d()

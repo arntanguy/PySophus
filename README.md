@@ -92,3 +92,29 @@ x = np.array([1,0,0,0,0,0]).T
 T = SE3.exp(x)
 print(T)
 ```
+
+
+Notes
+-----
+
+- Eigency expects `F_CONTIGUOUS` layout, numpy works by defaults on C_CONTIGUOUS arrays
+
+```python
+# Create C_CONTIGUOUS array
+T2_C = np.array([[1, 0, 0, 0],
+                     [0, math.cos(angle), -math.sin(angle), 0],
+                     [0, math.sin(angle), math.cos(angle), 0],
+                     [0, 0, 0, 1]])
+
+# Create F_CONTIGUOUS array
+T2_F = np.array([[1, 0, 0, 0],
+                     [0, math.cos(angle), -math.sin(angle), 0],
+                     [0, math.sin(angle), math.cos(angle), 0],
+                     [0, 0, 0, 1]], order='F')
+
+# T2_F is F_CONTIGUOUS, memory is simply mapped to eigency
+T_F = SE3(T2_F)
+
+# T2_C is first converted from C_CONTIGUOUS to F_CONTIGUOUS, which causes a copy
+T_C = SE3(T2_numpy)
+```
